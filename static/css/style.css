@@ -1,0 +1,89 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%) !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+/* Navbar Hover Effects */
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.2rem;
+    border-radius: 8px;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff !important;
+}
+
+/* Auth Card Styles */
+.auth-card {
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+}
+
+.auth-header {
+    background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.auth-body {
+    padding: 40px;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    border-color: #0d6efd;
+}
+
+.btn-auth {
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%);
+    border: none;
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-auth:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+    color: white;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.badge {
+    font-weight: 500;
+    padding: 6px 12px;
+}

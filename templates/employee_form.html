@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome, {{ name }}</h2>
+    <h3>Today's Application Usage</h3>
+    <canvas id="usageChart"></canvas>
+
+    <script>
+      const ctx = document.getElementById('usageChart').getContext('2d');
+      const usageChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: {{ apps|tojson }},
+          datasets: [{
+            data: {{ durations|tojson }},
+            backgroundColor: [
+              '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
+            ]
+          }]
+        },
+        options: { responsive: true }
+      });
+    </script>
+
+    <h3>Detailed Usage</h3>
+    <table border="1">
+      <tr><th>Application</th><th>Duration (mins)</th></tr>
+      {% for u in usage %}
+        <tr><td>{{ u.app_name }}</td><td>{{ u.duration }}</td></tr>
+      {% endfor %}
+    </table>
+
+    <br>
+    <a href="/logout" class="logout">Logout</a>
+  </div>
+</body>
+</html>

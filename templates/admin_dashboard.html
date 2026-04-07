@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold">Admin Dashboard</h2>
+    <span class="badge bg-danger p-2">Administrator</span>
+</div>
+
+<div class="row mb-4">
+    <!-- App Usage Chart Card -->
+    <div class="col-md-7">
+        <div class="card shadow-sm border-0 p-4 h-100">
+            <h4 class="mb-4 text-secondary"><i class="bi bi-pie-chart-fill me-2"></i>Global App Usage</h4>
+            <div style="position: relative; height: 300px;">
+                <canvas id="appChart" data-labels='{{ app_names|tojson|safe }}'
+                    data-durations='{{ app_durations|tojson|safe }}'>
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats or Summary Card -->
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 p-4 h-100 bg-light">
+            <h4 class="mb-4 text-secondary">System Overview</h4>
+            <div class="d-flex flex-column gap-3">
+                <div class="p-3 bg-white rounded shadow-sm d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted d-block">Total Employees</small>
+                        <span class="h4 mb-0 fw-bold">{{ employees|length }}</span>
+                    </div>
+                    <i class="bi bi-people-fill text-primary fs-2"></i>
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted d-block">Total Logs</small>
+                        <span class="h4 mb-0 fw-bold">{{ attendance|length }}</span>
+                    </div>
+                    <i class="bi bi-clock-history text-success fs-2"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Attendance Log Table -->
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 p-0 overflow-hidden">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0"><i class="bi bi-journal-text me-2"></i>Recent Attendance Logs</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Employee</th>
+                                <th>Employee ID</th>
+                                <th>Login Time</th>
+                                <th>Logout Time</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for a in attendance[-10:]|reverse %}
+                            <tr>
+                                <td><strong>{{ a.employee.name }}</strong></td>
+                                <td><code class="text-primary">{{ a.employee.employee_id }}</code></td>
+                                <td>{{ a.login_time }}</td>
+                                <td>
+                                    {% if a.logout_time %}
+                                    {{ a.logout_time }}
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Active</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ a.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Usage Detailed Table -->
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 p-0 overflow-hidden">
+            <div class="card-header bg-success text-white py-3">
+                <h5 class="mb-0"><i class="bi bi-cpu-fill me-2"></i>Detailed App Usage (All Users)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Employee</th>
+                                <th>App Name</th>
+                                <th>Duration</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in usage_data[-10:]|reverse %}
+                            <tr>
+                                <td><strong>{{ u.employee.name }}</strong></td>
+                                <td><span class="badge bg-info text-dark">{{ u.app_name }}</span></td>
+                                <td>{{ u.duration }} mins</td>
+                                <td>{{ u.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById('appChart');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const labels = JSON.parse(canvas.getAttribute('data-labels') || '[]');
+        const durations = JSON.parse(canvas.getAttribute('data-durations') || '[]');
+
+        const centerText = {
+            id: 'centerText',
+            afterDraw: (chart) => {
+                const { ctx, chartArea: { top, bottom, left, right, width, height } } = chart;
+                ctx.save();
+                ctx.font = 'bold 18px Poppins';
+                ctx.fillStyle = '#666';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('ALL APPS', left + width / 2, top + height / 2);
+                ctx.restore();
+            }
+        };
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: durations,
+                    backgroundColor: [
+                        '#FF4D8D', '#FFB84D', '#FFF24D', '#4DFFEB', '#A14DFF'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 20
+                }]
+            },
+            plugins: [ChartDataLabels, centerText],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 12,
+                            family: 'Poppins'
+                        },
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value * 100 / sum).toFixed(0) + "%";
+                            let label = ctx.chart.data.labels[ctx.dataIndex];
+                            return `${label}\n${percentage}`;
+                        },
+                        anchor: 'end',
+                        align: 'start',
+                        offset: 10,
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function (context) {
+                                return ` ${context.label}: ${context.parsed} mins`;
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    padding: 20
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    .card {
+        border-radius: 12px;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    code {
+        background: #f1f3f5;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<h2 class="text-primary">👤 My Profile</h2>
+
+<div class="card p-3 shadow mt-3">
+    <h5>Name: {{ user.name }}</h5>
+    <p>Department: {{ user.department }}</p>
+    <p>Position: {{ user.position }}</p>
+    <p>Status: <span class="badge bg-success">{{ user.status }}</span></p>
+</div>
+
+<h4 class="mt-4">Recent Attendance</h4>
+<table class="table table-striped">
+    <thead class="table-primary">
+        <tr><th>Date</th><th>Login Time</th><th>Logout Time</th></tr>
+    </thead>
+    <tbody>
+        {% for a in attendance %}
+        <tr>
+            <td>{{ a.date }}</td>
+            <td>{{ a.login_time }}</td>
+            <td>{{ a.logout_time or "Active" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h4 class="mt-4">App Usage</h4>
+<table class="table table-hover">
+    <thead class="table-success">
+        <tr><th>App</th><th>Duration (mins)</th><th>Date</th></tr>
+    </thead>
+    <tbody>
+        {% for u in usage %}
+        <tr>
+            <td>{{ u.app_name }}</td>
+            <td>{{ u.duration }}</td>
+            <td>{{ u.date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

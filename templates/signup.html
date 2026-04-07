@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h3 class="fw-bold mb-0">Create Account</h3>
+                <p class="text-white-50 mt-2 mb-0">Join the employee system today</p>
+            </div>
+            <div class="auth-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-12 mb-4">
+                            <label class="form-label fw-semibold text-muted">Full Name</label>
+                            <input type="text" name="full_name" class="form-control" placeholder="John Doe" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-4">
+                            <label class="form-label fw-semibold text-muted">Email Address</label>
+                            <input type="email" name="email" class="form-control" placeholder="john@company.com"
+                                required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold text-muted">Employee ID</label>
+                            <input type="text" name="employee_id" class="form-control" placeholder="EMP123" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold text-muted">Job Title</label>
+                            <input type="text" name="job_title" class="form-control" placeholder="Developer" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-muted">Password</label>
+                        <input type="password" name="password" class="form-control"
+                            placeholder="Create a strong password" required>
+                    </div>
+                    <button type="submit" class="btn btn-auth w-100 mt-2">Register Now</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-muted mb-0">Already an employee? <a href="{{ url_for('login') }}"
+                            class="text-primary text-decoration-none fw-bold">Login Here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
